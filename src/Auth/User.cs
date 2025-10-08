@@ -80,6 +80,31 @@ namespace Firebase.Auth
         }
 
         /// <summary>
+        /// Change user's Email address.
+        /// </summary>
+        /// <param name="email"> The new Email address. </param>
+        public async Task ChangeEmailAsync(string email)
+        {
+            var token = await this.GetIdTokenAsync().ConfigureAwait(false);
+            var result = await this.updateAccount.ExecuteAsync(new UpdateAccountRequest 
+            { 
+                IdToken = token,
+                Email = email,
+                ReturnSecureToken = true
+            }).ConfigureAwait(false);
+
+            this.Credential = new FirebaseCredential
+            {
+                ExpiresIn = result.ExpiresIn,
+                IdToken = result.IdToken,
+                ProviderType = this.Credential.ProviderType,
+                RefreshToken = result.RefreshToken
+            };
+
+            this.config.UserManager.UpdateExistingUser(this);
+        }
+
+        /// <summary>
         /// Delete user's account.
         /// </summary>
         public async Task DeleteAsync()
