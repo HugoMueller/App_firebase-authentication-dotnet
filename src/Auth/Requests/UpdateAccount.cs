@@ -5,6 +5,7 @@
         public string Password { get; set; }
         
         public bool ReturnSecureToken { get; set; }
+        public string Email { get; set; }
     }
 
     public class UpdateAccountResponse
